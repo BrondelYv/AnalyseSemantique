@@ -1,14 +1,15 @@
 import streamlit as st
 import re
+import logging
 from collections import Counter
 import docx
 import nltk
 from nltk.util import ngrams
 from nltk.tokenize import sent_tokenize
 
-# Configuration de la page
+# Configurer l'application Streamlit
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
-nltk.download('punkt')  # Assurez-vous de télécharger 'punkt'
+nltk.download('punkt')
 
 # Appliquer des styles CSS personnalisés
 st.markdown("""
@@ -103,8 +104,23 @@ st.sidebar.markdown("""
     <div class="small-text">📈 Analyse sémantique des transcriptions des conférences</div>
 """, unsafe_allow_html=True)
 
-# Affichage du titre principal
-st.title("Analyse sémantique des mots et expressions pertinents")
+# Configuration du fichier de logs
+logging.basicConfig(filename='user_activity.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+
+# Enregistrer les logs des actions utilisateur
+def log_user_activity(activity):
+    logging.info(activity)
+
+# Authentification basique (exemple)
+def login(username, password):
+    if username == "admin" and password == "password":
+        log_user_activity(f"User '{username}' successfully logged in")
+        st.session_state['logged_in'] = True  # Stocker l'état de connexion dans session_state
+        return True
+    else:
+        log_user_activity(f"User '{username}' failed to log in")
+        st.session_state['logged_in'] = False
+        return False
 
 # Fonction pour charger le document Word et extraire le texte
 def load_docx(file):
@@ -210,29 +226,49 @@ stop_words = set([
     "mes", "tes", "ses", "nos", "vos", "leurs"
 ])
 
-# Téléchargement du fichier
-uploaded_file = st.file_uploader("Téléchargez un fichier Word (.docx)", type="docx")
+# Page de connexion
+def login_page():
+    st.title("Connexion à l'application d'analyse")
+    
+    # Authentification de l'utilisateur avec des clés uniques pour chaque text_input
+    username = st.text_input("Nom d'utilisateur", key="username_login")
+    password = st.text_input("Mot de passe", type="password", key="password_login")
 
-if uploaded_file:
-    # Charger et afficher le contenu du fichier
-    text = load_docx(uploaded_file)
+    if st.button("Se connecter"):
+        if login(username, password):
+            st.session_state['logged_in'] = True
+            st.success("Connexion réussie.")
+        else:
+            st.error("Nom d'utilisateur ou mot de passe incorrect")
 
-    # Ajouter un bouton pour lancer l'analyse sémantique
-    if st.button("Lancer l'analyse sémantique"):
-        # Prétraiter le texte
-        text_cleaned = preprocess_text(text)
+# Page d'analyse (pour après la connexion)
+def analysis_page():
+    st.title("Analyse sémantique des conférences")
+    
+    # Text_input avec une clé unique pour éviter les conflits d'ID
+    search_word = st.text_input("Entrez un mot pour rechercher dans le texte", key="search_word_analysis")
+    
+    # Téléchargement du fichier
+    uploaded_file = st.file_uploader("Téléchargez un fichier Word (.docx)", type="docx", key="file_upload_analysis")
 
-        # Extraire les bigrammes et mots fréquents
-        bigram_counts = extract_bigrams(text_cleaned, stop_words)
-        word_counts = count_word_occurrences(text_cleaned, stop_words)
+    if uploaded_file:
+        text = load_docx(uploaded_file)
+        st.success("Fichier chargé avec succès.")
+        
+        # Ajouter un bouton pour lancer l'analyse
+        if st.button("Lancer l'analyse sémantique", key="launch_analysis"):
+            text_cleaned = preprocess_text(text)
+            bigram_counts = extract_bigrams(text_cleaned, stop_words)
+            word_counts = count_word_occurrences(text_cleaned, stop_words)
+            display_results(word_counts, bigram_counts, text)
+            search_word_in_text(text, search_word)
+        
+# Gestion de l'état de connexion
+if 'logged_in' not in st.session_state:
+    st.session_state['logged_in'] = False
 
-        # Afficher les résultats
-        display_results(word_counts, bigram_counts, text)
-
-        # Exécuter la recherche du mot
-        search_word_in_text(text, search_word)
-
-        # Afficher un message de succès
-        st.success("Analyse sémantique terminée avec succès!")
+# Affichage de la page d'analyse si connecté, sinon la page de connexion
+if st.session_state['logged_in']:
+    analysis_page()
 else:
-    st.write("Veuillez télécharger un fichier Word pour analyser.")
+    login_page()
