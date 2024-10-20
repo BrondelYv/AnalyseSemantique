@@ -11,7 +11,7 @@ from nltk.tokenize import sent_tokenize
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 nltk.download('punkt')
 
-# Appliquer des styles CSS personnalisés
+# Appliquer des styles CSS personnalisés pour l'arrière plan
 st.markdown("""
     <style>
     [data-testid="stSidebarContent"] {
@@ -45,7 +45,9 @@ st.markdown("""
 
 # 1ere section de la page avec mise en forme
 # de la boîte de recherche et de la notification avec le nom de l'utilisateur
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
+with col3:
+    pass
 
 # Affichage de l'alerte et du champ de recherche en haut
 with col1:
@@ -106,6 +108,7 @@ st.sidebar.markdown("""
 
 # Configuration du fichier de logs
 logging.basicConfig(filename='user_activity.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+
 
 # Enregistrer les logs des actions utilisateur
 def log_user_activity(activity):
@@ -191,6 +194,43 @@ def display_results(word_counts, bigram_counts, text):
             for sentence in trending_sentences:
                 st.write(f"- {sentence}")
 
+# Fonction pour ajouter les styles CSS basés sur le thème
+def apply_theme(theme):
+    if theme == "dark":
+        bg_color = "#333"
+        text_color = "#fff"
+        btn_color = "#555"
+    else:
+        bg_color = "#f1f1f1"
+        text_color = "#000"
+        btn_color = "#4CAF50"
+
+    # Appliquer les styles CSS
+    st.markdown(f"""
+        <style>
+        .stApp {{
+            background-color: {bg_color};
+            color: {text_color};
+        }}
+        .css-1v3fvcr {{
+            background-color: {bg_color};
+            color: {text_color};
+        }}
+        div.stButton > button {{
+            background-color: {btn_color};
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+        }}
+        </style>
+    """, unsafe_allow_html=True)
+
+with col3:
+    # Ajouter un sélecteur de thème (dark ou light)
+    theme = st.radio("Choix du thème", ("light", "dark"))
+    apply_theme(theme)
+
 # Liste des stop words
 stop_words = set([
     # Articles et pronoms
@@ -250,7 +290,6 @@ def analysis_page():
     
     # Téléchargement du fichier
     uploaded_file = st.file_uploader("Téléchargez un fichier Word (.docx)", type="docx", key="file_upload_analysis")
-
     if uploaded_file:
         text = load_docx(uploaded_file)
         st.success("Fichier chargé avec succès.")
