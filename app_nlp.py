@@ -10,67 +10,6 @@ from nltk.tokenize import sent_tokenize
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 nltk.download('punkt')  # Assurez-vous de télécharger 'punkt'
 
-# Appliquer des styles CSS personnalisés
-st.markdown("""
-    <style>
-    [data-testid="stSidebarContent"] {
-        color: grey;
-        background-color: #FEFEFE;
-    }
-    .stApp {
-        background-color: #EBF4F7;
-    }
-    .main-container {
-        background-color: #FFFFFF;
-        border-radius: 10px;
-        font-family: 'Arial';
-    }
-    .col-container {
-        background-color: #FFFBEC;
-        border-radius: 10px;
-    }
-    div.stButton > button {
-        background-color: #EFE9FF;
-        color: black;
-        padding: 10px 20px;
-        border-radius: 10px;
-        border: none;
-    }
-    .header-text {
-        color: black;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# Affichage de l'alerte et du champ de recherche en haut
-st.markdown("""
-    <style>
-    .alert-band {
-        background-color: #F6F6F6;
-        padding: 10px;
-        border-radius: 10px;
-        align-items: center;
-        justify-content: center;
-        font-size: 13x;
-        color: black;
-        font-weight: bold;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    </style>
-    <div class="alert-band">
-        <span class="page-title-name-user">Yvell Mvoumbi</span> <span class="emoji">🔔</span>
-    </div>
-""", unsafe_allow_html=True)
-
-# Champ de saisie pour la recherche de mots en haut de la page
-search_word = st.text_input("Entrez un mot pour rechercher dans le texte", "")
-
-# Barre latérale
-st.sidebar.title("Menu")
-st.sidebar.markdown("""
-    <div class="small-text">📈 Analyse sémantique des conférences</div>
-""", unsafe_allow_html=True)
-
 # Affichage du titre principal
 st.title("Analyse des Mots et Expressions Pertinents dans une Conférence")
 
