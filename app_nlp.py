@@ -78,6 +78,41 @@ def create_pdf(content):
     else:
         st.error("Le contenu est vide, impossible de générer le PDF.")
 
+
+stop_words = set([
+    # Articles et pronoms
+    "le", "la", "les", "et", "de", "du", "des", "en", "pour", "avec",
+    "sur", "par", "à", "un", "une", "d", "l", "que", "qui", "est",
+    "ce", "nous", "il", "elle", "ils", "elles", "ne", "pas", "mais",
+    "aux", "dans", "on", "vous", "je", "qu", "si", "c", "n", "a", "ça",
+    "y", "au", "plus", "fait", "va", "dire", "là", "ou", "alors", "être",
+    "peut", "tout", "quand", "même", "sont", "très", "donc", "hui", "1",
+    "intervenant", "aujourd", "été", "j'ai", "avez", "aussi", "s", "cette", "se", "ont", "m", "peu",
+    "comme", "lorsque", "quand", "si", "puisque", "parce que", "afin que",
+    "bien que", "quoique", "malgré que", "avant que", "sans que", "pour que",
+    "depuis que", "dès que", "jusqu'à ce que", "à condition que",
+    "pourvu que", "pendant que", "tandis que", "alors que", "où", "bien", "j", "ai",
+    
+    # Conjonctions de subordination
+    "comme", "lorsque", "quand", "si", "puisque", "parce que", "afin que",
+    "bien que", "quoique", "malgré que", "avant que", "sans que", "pour que",
+    "depuis que", "dès que", "jusqu'à ce que", "à condition que",
+    "pourvu que", "pendant que", "tandis que", "alors que", "où",
+    
+    # Verbes courants
+    "avoir", "être", "faire", "aller", "pouvoir", "vouloir", "devoir",
+    "falloir", "venir", "prendre", "mettre", "savoir", "voir", "croire",
+    "trouver", "donner", "parler", "passer", "penser", "aimer", "demander", "était",
+    
+    # Mots de liaison
+    "cependant", "toutefois", "d'ailleurs", "en effet", "de plus", "également",
+    "enfin", "donc", "ainsi", "puis", "ensuite", "par ailleurs", "autrefois",
+    
+    # Adjectifs possessifs
+    "mon", "ton", "son", "notre", "votre", "leur", "ma", "ta", "sa",
+    "mes", "tes", "ses", "nos", "vos", "leurs"
+])
+
 # Fonction principale pour lancer l'analyse
 def main():
     uploaded_file = st.file_uploader("Téléchargez un fichier Word (.docx)", type="docx")
