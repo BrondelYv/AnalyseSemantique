@@ -61,19 +61,14 @@ def search_word_in_text(text, word):
     else:
         st.write("Veuillez entrer un mot à rechercher.")
 
-# Générer le fichier PDF à partir des résultats en utilisant une police prenant en charge l'UTF-8
+# Générer le fichier PDF à partir des résultats
 def create_pdf(content):
-    if content:
+    if content:  # Vérifier que le contenu n'est pas None ou vide
         pdf = FPDF()
         pdf.add_page()
-        font_path = os.path.join(os.path.dirname(__file__), 'DejaVuSansCondensed.ttf')
-        if not os.path.exists(font_path):
-            st.error("Fichier de police introuvable. Assurez-vous que 'DejaVuSansCondensed.ttf' est dans le bon répertoire.")
-            return None
-        pdf.add_font('DejaVu', '', font_path, uni=True)
-        pdf.set_font('DejaVu', '', 12)
+        pdf.set_font("Arial", size=12)
         for line in content.split('\n'):
-            pdf.cell(200, 10, txt=line.encode('latin-1', 'replace').decode('latin-1'), ln=True)
+            pdf.cell(200, 10, txt=line, ln=True)
         return pdf
     else:
         st.error("Le contenu est vide, impossible de générer le PDF.")
