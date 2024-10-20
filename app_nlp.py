@@ -42,25 +42,57 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# 1ere section de la page avec mise en forme
+# de la boîte de recherche et de la notification avec le nom de l'utilisateur
+col1, col2 = st.columns(2)
+
 # Affichage de l'alerte et du champ de recherche en haut
-st.markdown("""
-    <style>
-    .alert-band {
-        background-color: #F6F6F6;
-        padding: 10px;
-        border-radius: 10px;
-        align-items: center;
-        justify-content: center;
-        font-size: 13x;
-        color: black;
-        font-weight: bold;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    </style>
-    <div class="alert-band">
-        <span class="page-title-name-user">Yvell Mvoumbi</span> <span class="emoji">🔔</span>
-    </div>
-""", unsafe_allow_html=True)
+with col1:
+    st.markdown("""
+        <style>
+        .alert-band {
+            background-color: #F6F6F6;
+            padding: 10px;
+            border-radius: 10px;
+            align-items: center;
+            justify-content: center;
+            font-size: 13x;
+            color: black;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        </style>
+        <div class="alert-band">
+            <span class="page-title-name-user">👋 Bonjour, </span> <span class="page-title-name-user">Yvell Mvoumbi </span>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown(
+        """
+        <style>
+        .alert-band {
+            background-color: #F6F6F6; /* Light red background for the alert */
+            padding: 10px;
+            border-radius: 10px;
+            align-items: center;
+            justify-content: center;
+            font-size: 13x;
+            color: black;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+        }
+        .alert-band .emoji {
+            font-size: 16px; /* Adjust size of the emoji */
+            margin-left: 10px; /* Space between emoji and text */
+        }
+        </style>
+        <div class="alert-band">
+            <span class="page-title-name-user">Notifications<span   ><span class="emoji">🔔</span> 
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # Champ de saisie pour la recherche de mots en haut de la page
 search_word = st.text_input("Entrez un mot pour rechercher dans le texte", "")
@@ -73,9 +105,6 @@ st.sidebar.markdown("""
 
 # Affichage du titre principal
 st.title("Analyse sémantique des mots et expressions pertinents")
-st.markdown("""
-    <div class="page-title">👋 Bonjour, <span class="page-title-name-user">Yvell Mvoumbi</span></div>
-""", unsafe_allow_html=True)
 
 # Fonction pour charger le document Word et extraire le texte
 def load_docx(file):
