@@ -10,8 +10,72 @@ from nltk.tokenize import sent_tokenize
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 nltk.download('punkt')  # Assurez-vous de télécharger 'punkt'
 
+# Appliquer des styles CSS personnalisés
+st.markdown("""
+    <style>
+    [data-testid="stSidebarContent"] {
+        color: grey;
+        background-color: #FEFEFE;
+    }
+    .stApp {
+        background-color: #EBF4F7;
+    }
+    .main-container {
+        background-color: #FFFFFF;
+        border-radius: 10px;
+        font-family: 'Arial';
+    }
+    .col-container {
+        background-color: #FFFBEC;
+        border-radius: 10px;
+    }
+    div.stButton > button {
+        background-color: #EFE9FF;
+        color: black;
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: none;
+    }
+    .header-text {
+        color: black;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Affichage de l'alerte et du champ de recherche en haut
+st.markdown("""
+    <style>
+    .alert-band {
+        background-color: #F6F6F6;
+        padding: 10px;
+        border-radius: 10px;
+        align-items: center;
+        justify-content: center;
+        font-size: 13x;
+        color: black;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    </style>
+    <div class="alert-band">
+        <span class="page-title-name-user">Yvell Mvoumbi</span> <span class="emoji">🔔</span>
+    </div>
+""", unsafe_allow_html=True)
+
+# Champ de saisie pour la recherche de mots en haut de la page
+search_word = st.text_input("Entrez un mot pour rechercher dans le texte", "")
+
+# Barre latérale
+st.sidebar.title("Menu")
+st.sidebar.markdown("""
+    <div class="small-text">📈 Analyse sémantique des transcriptions des conférences</div>
+""", unsafe_allow_html=True)
+
 # Affichage du titre principal
-st.title("Analyse des Mots et Expressions Pertinents dans une Conférence")
+st.title("Analyse sémantique des mots et expressions pertinents")
+st.markdown("""
+    <div class="page-title">👋 Bonjour, <span class="page-title-name-user">Yvell Mvoumbi</span></div>
+""", unsafe_allow_html=True)
 
 # Fonction pour charger le document Word et extraire le texte
 def load_docx(file):
@@ -83,7 +147,39 @@ def display_results(word_counts, bigram_counts, text):
                 st.write(f"- {sentence}")
 
 # Liste des stop words
-stop_words = set([...])  # Ta liste de mots ici
+stop_words = set([
+    # Articles et pronoms
+    "le", "la", "les", "et", "de", "du", "des", "en", "pour", "avec",
+    "sur", "par", "à", "un", "une", "d", "l", "que", "qui", "est",
+    "ce", "nous", "il", "elle", "ils", "elles", "ne", "pas", "mais",
+    "aux", "dans", "on", "vous", "je", "qu", "si", "c", "n", "a", "ça",
+    "y", "au", "plus", "fait", "va", "dire", "là", "ou", "alors", "être",
+    "peut", "tout", "quand", "même", "sont", "très", "donc", "hui", "1",
+    "intervenant", "aujourd", "été", "j'ai", "avez", "aussi", "s", "cette", "se", "ont", "m", "peu",
+    "comme", "lorsque", "quand", "si", "puisque", "parce que", "afin que",
+    "bien que", "quoique", "malgré que", "avant que", "sans que", "pour que",
+    "depuis que", "dès que", "jusqu'à ce que", "à condition que",
+    "pourvu que", "pendant que", "tandis que", "alors que", "où", "bien", "j", "ai",
+    
+    # Conjonctions de subordination
+    "comme", "lorsque", "quand", "si", "puisque", "parce que", "afin que",
+    "bien que", "quoique", "malgré que", "avant que", "sans que", "pour que",
+    "depuis que", "dès que", "jusqu'à ce que", "à condition que",
+    "pourvu que", "pendant que", "tandis que", "alors que", "où",
+    
+    # Verbes courants
+    "avoir", "être", "faire", "aller", "pouvoir", "vouloir", "devoir",
+    "falloir", "venir", "prendre", "mettre", "savoir", "voir", "croire",
+    "trouver", "donner", "parler", "passer", "penser", "aimer", "demander", "était",
+    
+    # Mots de liaison
+    "cependant", "toutefois", "d'ailleurs", "en effet", "de plus", "également",
+    "enfin", "donc", "ainsi", "puis", "ensuite", "par ailleurs", "autrefois",
+    
+    # Adjectifs possessifs
+    "mon", "ton", "son", "notre", "votre", "leur", "ma", "ta", "sa",
+    "mes", "tes", "ses", "nos", "vos", "leurs"
+])
 
 # Téléchargement du fichier
 uploaded_file = st.file_uploader("Téléchargez un fichier Word (.docx)", type="docx")
