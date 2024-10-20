@@ -6,41 +6,29 @@ import nltk
 from nltk.util import ngrams
 from nltk.tokenize import sent_tokenize
 
+# Configuration de la page
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
-st.html(
-    """
+nltk.download('punkt')  # Assurez-vous de télécharger 'punkt'
+
+# Appliquer des styles CSS personnalisés
+st.markdown("""
     <style>
     [data-testid="stSidebarContent"] {
         color: grey;
         background-color: #FEFEFE;
     }
-    </style>
-
-    <style>
-    /* Style for the sidebar */
-    .css-1d391kg .css-1l02zno, .css-1d391kg .css-17eq0hr, .css-1d391kg .css-k4mp6c {  /* Sidebar text color */
-        color: grey;
-        font-size: 50px;}
-
-    /* Main page background */
     .stApp {
         background-color: #EBF4F7;
     }
-
-    /* Style for the main container (white background) */
     .main-container {
         background-color: #FFFFFF;
         border-radius: 10px;
         font-family: 'Arial';
     }
-
-    /* Style for col1 and col2 containers */
     .col-container {
         background-color: #FFFBEC;
         border-radius: 10px;
     }
-
-    /* Style for buttons */
     div.stButton > button {
         background-color: #EFE9FF;
         color: black;
@@ -48,120 +36,46 @@ st.html(
         border-radius: 10px;
         border: none;
     }
-
-    /* Text alignment for header */
     .header-text {
         color: black;
     }
-
     </style>
-    """
-)
+""", unsafe_allow_html=True)
 
-st.sidebar.write("")
-st.sidebar.title("Menu")
-st.sidebar.markdown(
-    """
+# Affichage de l'alerte et du champ de recherche en haut
+st.markdown("""
     <style>
-    .small-text {
-        background-color: #EFE9FF;
+    .alert-band {
+        background-color: #F6F6F6;
         padding: 10px;
         border-radius: 10px;
-        font-size: 16px !important;  /* Force smaller text size */
-        color: grey;
-    }
-    </style>
-    <div class="small-text"> 📈 Analyse sémantique des conférences</div>
-    """,
-    unsafe_allow_html=True
-)
-
-# 1ere section de la page avec mise en forme
-# de la boîte de recherche et de la notification avec le nom de l'utilisateur
-col1, col2, col3, col4, col5 = st.columns(5)
-with col1:
-    pass
-with col2:
-    pass
-with col5:
-    pass
-with col3:
-    st.markdown(
-        """
-        <style>
-        .alert-band {
-            background-color: #F6F6F6; /* Light red background for the alert */
-            padding: 10px;
-            border-radius: 10px;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            color: black;
-            font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
-        }
-        .alert-band .emoji {
-            font-size: 15px; /* Adjust size of the emoji */
-            margin-left: 10px; /* Space between emoji and text */
-        }
-        </style>
-        <div class="alert-band">
-            Rechercher....<span class="emoji">🔍</span> 
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-with col4:
-    st.markdown(
-        """
-        <style>
-        .alert-band {
-            background-color: #F6F6F6; /* Light red background for the alert */
-            padding: 10px;
-            border-radius: 10px;
-            align-items: center;
-            justify-content: center;
-            font-size: 13x;
-            color: black;
-            font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
-        }
-        .alert-band .emoji {
-            font-size: 16px; /* Adjust size of the emoji */
-            margin-left: 10px; /* Space between emoji and text */
-        }
-        </style>
-        <div class="alert-band">
-            <span class="page-title-name-user">Yvell Mvoumbi<span   ><span class="emoji">🔔</span> 
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-# 2e section avec salutation et message de bienvenue
-st.write("")
-st.write("")
-st.markdown(
-    """
-    <style>
-    .page-title {
-        font-size: 20px !important;  /* Force smaller text size */
+        align-items: center;
+        justify-content: center;
+        font-size: 13x;
         color: black;
         font-weight: bold;
-
-    }
-    .page-title-name-user {
-        font-weight: bold;
-        color: #8239D6;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     </style>
-    <div class="page-title"> 👋 Bonjour, <span class="page-title-name-user">Yvell Mvoumbi<span></div>
-    """,
-    unsafe_allow_html=True
-)
+    <div class="alert-band">
+        <span class="page-title-name-user">Yvell Mvoumbi</span> <span class="emoji">🔔</span>
+    </div>
+""", unsafe_allow_html=True)
+
+# Champ de saisie pour la recherche de mots en haut de la page
+search_word = st.text_input("Entrez un mot pour rechercher dans le texte", "")
+
+# Barre latérale
+st.sidebar.title("Menu")
+st.sidebar.markdown("""
+    <div class="small-text">📈 Analyse sémantique des transcriptions des conférences</div>
+""", unsafe_allow_html=True)
 
 # Affichage du titre principal
 st.title("Analyse sémantique des mots et expressions pertinents")
+st.markdown("""
+    <div class="page-title">👋 Bonjour, <span class="page-title-name-user">Yvell Mvoumbi</span></div>
+""", unsafe_allow_html=True)
 
 # Fonction pour charger le document Word et extraire le texte
 def load_docx(file):
